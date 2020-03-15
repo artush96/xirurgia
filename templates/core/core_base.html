@@ -1,0 +1,325 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block core %}
+    <div class="site-section" id="services-section">
+        <div class="container">
+            <div class="row ">
+                <div class="col-12 mb-5 position-relative">
+                    <h2 class="section-title text-center mb-5">{% trans 'Մեր Ծառայությունները' %}</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-11 mb-4">
+                        {% if service %}
+                            <div class="service d-flex h-100">
+                                <div class="service-about">
+                                    {% if LANGUAGE_CODE == 'en' and service.name_en|length > 0 %}
+                                        <h3>{{ service.name_en }}</h3>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-12 col-sm-12 m-auto">
+                                                <img style="max-width: 100%" src="{{ service.img.url }}"
+                                                     alt="Նիհարեցում">
+                                            </div>
+                                            <div class="col-lg-8 col-md-12 col-sm-12">
+                                                <p>{{ service.body_en|safe }}</p>
+                                            </div>
+                                        </div>
+                                    {% elif LANGUAGE_CODE == 'ru' and service.name_ru|length > 0 %}
+                                        <h3>{{ service.name_ru }}</h3>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-12 col-sm-12 m-auto">
+                                                <img style="max-width: 100%" src="{{ service.img.url }}"
+                                                     alt="Նիհարեցում">
+                                            </div>
+                                            <div class="col-lg-8 col-md-12 col-sm-12">
+                                                <p>{{ service.body_ru|safe }}</p>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <h3>{{ service.name_hy }}</h3>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-12 col-sm-12 m-auto">
+                                                <img style="max-width: 100%" src="{{ service.img.url }}"
+                                                     alt="Նիհարեցում">
+                                            </div>
+                                            <div class="col-lg-8 col-md-12 col-sm-12">
+                                                <p>{{ service.body_hy|safe }}</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% for foo in services %}
+                    <div class="col-md-6 mb-4">
+                        <div class="service d-flex h-100">
+                            <div class="service-about">
+                                {% if LANGUAGE_CODE == 'en' and foo.name_en|length > 0 %}
+                                    <h3>{{ foo.name_en }}</h3>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-12 col-sm-4 m-auto">
+                                            <img style="max-width: 100%" src="{{ foo.img.url }}"
+                                                 alt="Բժշկական ծառայություններ">
+                                        </div>
+                                        <div class="col-lg-8 col-md-12 col-sm-8">
+                                            <p>{{ foo.body_en|safe }}</p>
+                                        </div>
+                                    </div>
+                                {% elif LANGUAGE_CODE == 'ru' and foo.name_ru|length > 0 %}
+                                    <h3>{{ foo.name_ru }}</h3>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-12 col-sm-4 m-auto">
+                                            <img style="max-width: 100%" src="{{ foo.img.url }}"
+                                                 alt="Բժշկական ծառայություններ">
+                                        </div>
+                                        <div class="col-lg-8 col-md-12 col-sm-8">
+                                            <p>{{ foo.body_ru|safe }}</p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <h3>{{ foo.name_hy }}</h3>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-12 col-sm-4 m-auto">
+                                            <img style="max-width: 100%" src="{{ foo.img.url }}"
+                                                 alt="Բժշկական ծառայություններ">
+                                        </div>
+                                        <div class="col-lg-8 col-md-12 col-sm-8">
+                                            <p>{{ foo.body_hy|safe }}</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="site-section" id="about-section">
+        <div class="container">
+            {% if about %}
+                <div class="row ">
+                    <div class="col-12 mb-4 position-relative">
+                        <h2 class="section-title">{% trans 'Մեր մաասին' %}</h2>
+                    </div>
+                    <div class="col-lg-4 order-1 order-lg-2 mb-4 mb-lg-0">
+                        <div class="bg-light pt-5">
+                            <img src="{{ about.img.url }}" alt="Բժիշկ" class="img-fluid">
+                        </div>
+                    </div>
+                    {% if LANGUAGE_CODE == 'en' and about.body_l_en|length > 0 %}
+                        <div class="col-lg-4 order-2 order-lg-1">
+                            <p>{{ about.body_l_en|safe }}</p>
+                        </div>
+                        <div class="col-lg-4 order-3 order-lg-3">
+                            <p>{{ about.body_r_en|safe }}</p>
+                            <p>
+                                <a href="#contact-section"
+                                   class="btn smoothscroll btn-primary">{% trans 'Կապ մեր հետ' %}</a>
+                            </p>
+                        </div>
+                    {% elif LANGUAGE_CODE == 'ru' and about.body_l_ru|length > 0 %}
+                        <div class="col-lg-4 order-2 order-lg-1">
+                            <p>{{ about.body_l_ru|safe }}</p>
+                        </div>
+                        <div class="col-lg-4 order-3 order-lg-3">
+                            <p>{{ about.body_r_ru|safe }}</p>
+                            <p>
+                                <a href="#contact-section"
+                                   class="btn smoothscroll btn-primary">{% trans 'Կապ մեր հետ' %}</a>
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="col-lg-4 order-2 order-lg-1">
+                            <p>{{ about.body_l_hy|safe }}</p>
+                        </div>
+                        <div class="col-lg-4 order-3 order-lg-3">
+                            <p>{{ about.body_r_hy|safe }}</p>
+                            <p>
+                                <a href="#contact-section"
+                                   class="btn smoothscroll btn-primary">{% trans 'Կապ մեր հետ' %}</a>
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <section class="site-section block__62272" id="portfolio-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 position-relative">
+                    <h2 class="section-title text-center mb-5">{% trans 'Մեր գործերը' %}</h2>
+                </div>
+            </div>
+            <div class="row">
+                {% for foo in works %}
+                    {% if foo.img %}
+                        <div class="item col-6 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-4">
+                            <a>
+                                <img style="max-height: 250px" class="img-fluid"
+                                     src="{{ foo.img.url }}" alt="Նիհարեցում">
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="item col-6 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-4">
+                            <a style="height: 100%; width: 100%;">
+                                <iframe style="height: 100%; width: 100%;"
+                                        src="https://www.youtube.com/embed/{{ foo.url }}" frameborder="0"
+                                        allow="accelerometer; autoplay; encrypted-media; gyroscope;"
+                                        allowfullscreen=""></iframe>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <section class="site-section bg-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 mb-5 position-relative">
+                    <h2 class="section-title text-center mb-5 text-white">{% trans 'Կարծիքներ' %}</h2>
+                    <a class="btn btn-light" href="{% url 'core:review_create' %}">{% trans 'Ավելացնել նորը' %}</a>
+                    <a class="btn btn-light float-right" href="{% url 'core:reviews' %}">{% trans 'Դիտել բոլորը' %}</a>
+                </div>
+            </div>
+            <div class="owl-carousel slide-one-item">
+                {% for foo in reviews %}
+                    {% if foo.published == True %}
+                        <div class="slide">
+                            <blockquote>
+                                {% if LANGUAGE_CODE == 'en' and foo.disease_en|length > 0 %}
+                                    <cite>{{ foo.disease_en }}</cite>
+                                    <p>{{ foo.content_en|safe }}</p>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <cite>&mdash; {{ foo.name_en }}</cite>
+                                        </div>
+                                        <div class="col-12">
+                                            <cite style="font-size: 10px">{{ foo.pub_date|date:'M d Y' }}</cite>
+                                        </div>
+                                    </div>
+                                {% elif LANGUAGE_CODE == 'ru' and about_l_ru|length > 0 %}
+                                    <cite>{{ foo.disease_ru }}</cite>
+                                    <p>{{ foo.content_ru|safe }}</p>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <cite>&mdash; {{ foo.name_ru }}</cite>
+                                        </div>
+                                        <div class="col-12">
+                                            <cite style="font-size: 10px">{{ foo.pub_date|date:'M d Y' }}</cite>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <cite>{{ foo.disease_hy }}</cite>
+                                    <p>{{ foo.content_hy|safe }}</p>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <cite>&mdash; {{ foo.name_hy }}</cite>
+                                        </div>
+                                        <div class="col-12">
+                                            <cite style="font-size: 10px">{{ foo.pub_date|date:'M d Y' }}</cite>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </blockquote>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <section class="site-section" id="contact-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 mb-5 position-relative">
+                    <h2 class="section-title text-center mb-5">{% trans 'Կապ մեր հետ' %}</h2>
+                </div>
+            </div>
+            <form action="#" class="form">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="row mb-4">
+                            <div class="form-group col-12">
+                                <input type="text" class="form-control" placeholder="{% trans 'Անուն' %}">
+                            </div>
+                            <div class="form-group col-12">
+                                <input type="text" class="form-control" placeholder="{% trans 'Ազգանուն' %}">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="form-group col-12">
+                                <input type="email" class="form-control" placeholder="{% trans 'Էլեկտրոնային հասցե' %}">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="form-group col-12">
+                                <input type="text" class="form-control"
+                                       placeholder="{% trans 'Հաղորդագրության թեմա' %}">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="form-group col-12">
+                                <textarea name="" id="" cols="30" rows="3" class="form-control"
+                                          placeholder="{% trans 'Գրեք Ձեր հաղորդագրությունը այստեղ...' %}"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="submit" class="btn btn-primary" value="{% trans 'Ուղարկել նամակ' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 mt-sm-5">
+                        <div class="row m-auto">
+                            <div class="mapouter">
+                                <div class="gmap_canvas">
+                                    <iframe style="height: 100%; width: 100%;" id="gmap_canvas"
+                                            src="https://maps.google.com/maps?q=erebuni%20me&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                                            frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                                </div>
+                                <style>.mapouter {
+                                    position: relative;
+                                    text-align: right;
+                                    height: 260px;
+                                    width: 90%;
+                                }
+
+                                .gmap_canvas {
+                                    overflow: hidden;
+                                    background: none !important;
+                                    height: 260px;
+                                    width: 90%;
+                                }</style>
+                            </div>
+                            {% if contacts %}
+                                <div class="col-lg-6 col-md-12 col-sm-12 mb-3 mt-2">
+                                    <img style="max-height: 35px" src="{% static 'img/whatsapp.png' %}" alt="">
+                                    <a href="https://wa.me/{{ contacts.whatsapp }}">{{ contacts.whatsapp }}</a>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-sm-12 mb-3  mt-2">
+                                    <img style="max-height: 35px" src="{% static 'img/viber.png' %}" alt="">
+                                    <a href="viber://chat?number={{ contacts.viber }}">{{ contacts.viber }}</a>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <img style="max-height: 35px" src="{% static 'img/facebook.png' %}" alt="">
+                                    <a href="{{ contacts.fb }}">Facebook</a>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <img style="max-height: 35px" src="{% static 'img/gmail.png' %}" alt="">
+                                    <a href="mailto:{{ contacts.mail }}">Mail</a>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+                                    <img style="max-height: 35px" src="{% static 'img/phone.png' %}" alt="">
+                                    <a href="tel:{{ contacts.phone }}">+374 98 723489</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

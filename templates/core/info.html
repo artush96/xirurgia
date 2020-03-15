@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block core %}
+    <div class="site-section">
+        <div class="container">
+            <div class="row ">
+                {% if LANGUAGE_CODE == 'en' and info.name_en|length > 0 %}
+                    <div class="col-12 mb-5 position-relative">
+                        <h2 class="section-title text-center mb-5">{{ info.name_en }}</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-10">
+                            {{ info.info_en|safe }}
+                        </div>
+                    </div>
+                {% elif LANGUAGE_CODE == 'ru' and info.name_ru|length > 0 %}
+                    <div class="col-12 mb-5 position-relative">
+                        <h2 class="section-title text-center mb-5">{{ info.name_ru }}</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-10">
+                            {{ info.info_ru|safe }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12 mb-5 position-relative">
+                        <h2 class="section-title text-center mb-5">{{ info.name_hy }}</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-10">
+                            {{ info.info_hy|safe }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

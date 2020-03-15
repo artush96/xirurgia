@@ -1,0 +1,901 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" type="image/png"
+          href="https://static.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+    <link rel="shortcut icon" type="image/x-icon"
+          href="https://static.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+    <link rel="mask-icon" type=""
+          href="https://static.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg"
+          color="#111">
+    <title>CodePen - Calendar + task list (vanilla js)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300&amp;subset=latin-ext,latin"
+          rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <style>
+        html {
+            box-sizing: border-box;
+        }
+
+        *, *::after, *::before {
+            box-sizing: inherit;
+        }
+
+        html,
+        body {
+            height: 100vh;
+            width: 100vw;
+            max-width: 100%;
+            color: #ecf0f1;
+            font-family: "Source Sans Pro";
+            background: #eee;
+        }
+
+        #calendar {
+            min-width: 16.25em;
+            box-shadow: 0px 0px 8px 0px rgba(44, 62, 80, 0.4);
+            background: #fff;
+        }
+
+        .header {
+            height: 6em;
+            width: 100%;
+            display: table;
+            background: #4aa3df;
+        }
+
+        .header__main-date,
+        .header__arrow {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .header__arrow {
+            height: auto;
+            width: 15%;
+        }
+
+        .main-date__container {
+            height: auto;
+            width: 70%;
+            margin: 0 auto;
+        }
+
+        .main-date__container::after {
+            clear: both;
+            content: "";
+            display: block;
+        }
+
+        .main-date__container__day {
+            font-size: 3.1573345183em;
+            display: inline-block;
+        }
+
+        .day__month__wrapper {
+            display: inline-block;
+        }
+
+        .main-date__container__month,
+        .main-date__container__year {
+            font-size: 1.2em;
+            text-transform: uppercase;
+            display: block;
+        }
+
+        .arrow__arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate3d(-50%, -50%, 0);
+            transform: translate3d(-50%, -50%, 0);
+        }
+
+        .arrow__arrow::after {
+            clear: both;
+            content: "";
+            display: block;
+        }
+
+        .arrow--left {
+            text-align: right;
+        }
+
+        .arrow--right {
+            text-align: left;
+        }
+
+        .arrow__circle {
+            display: inline-block;
+            position: relative;
+            height: 2em;
+            width: 2em;
+            background: #ecf0f1;
+            background: #ecf0f1;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .arrow__pipe {
+            height: 0.375em;
+            width: 0.5em;
+            margin: 0.3125em 0 0;
+            background: #2980b9;
+        }
+
+        .arrow--left .arrow__pipe {
+            float: right;
+        }
+
+        .arrow--left .arrow__triangle {
+            float: right;
+            height: 0;
+            width: 0;
+            border-bottom: 0.5em solid transparent;
+            border-right: 0.5em solid #2980b9;
+            border-top: 0.5em solid transparent;
+        }
+
+        .arrow--right .arrow__pipe {
+            float: left;
+        }
+
+        .arrow--right .arrow__triangle {
+            float: left;
+            height: 0;
+            width: 0;
+            border-bottom: 0.5em solid transparent;
+            border-left: 0.5em solid #2980b9;
+            border-top: 0.5em solid transparent;
+        }
+
+        .days {
+            height: 2.5em;
+            width: 100%;
+            display: table;
+            text-align: center;
+            background: #2ecc71;
+        }
+
+        .days__day {
+            height: auto;
+            width: 14.28571%;
+            display: table-cell;
+            vertical-align: middle;
+            text-transform: capitalize;
+        }
+
+        .daysgrid {
+            color: #2c3e50;
+        }
+
+        .daysgrid__week::after {
+            clear: both;
+            content: "";
+            display: block;
+        }
+
+        .daysgrid__day {
+            display: table;
+            height: 3em;
+            width: 14.28571%;
+            position: relative;
+            float: left;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .day__number {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .day__status {
+            position: absolute;
+            top: 10%;
+            right: 0;
+            bottom: 0;
+            left: 10%;
+            height: 0.625em;
+            width: 0.625em;
+            border-radius: 50%;
+            background: none;
+        }
+
+        .daysgrid__day--today:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate3d(-50%, -50%, 0);
+            transform: translate3d(-50%, -50%, 0);
+            height: 2em;
+            width: 2em;
+            border-radius: 50%;
+            z-index: -1;
+            background: rgba(189, 195, 199, 0.3);
+        }
+
+        .daysgrid__tasks {
+            position: relative;
+            width: 100%;
+            min-height: 6em;
+            background: #ecf0f1;
+            box-shadow: inset 0px 0px 1px 0px rgba(44, 62, 80, 0.1);
+        }
+
+        .daysgrid__tasks::after {
+            clear: both;
+            content: "";
+            display: block;
+        }
+
+        .daysgrid__tasks input[type="text"] {
+            width: 70%;
+            margin: 0.5em 15%;
+            display: block;
+            position: relative;
+            bottom: 1em;
+            padding: 0.5em;
+            font-size: 1em;
+            border: 0;
+            outline: 0;
+            background: none;
+            border-bottom: 2px solid #bdc3c7;
+        }
+
+        .daysgrid__tasks ul {
+            list-tyle: none;
+            width: 80%;
+            margin: 0 auto;
+            padding: 1em 0;
+        }
+
+        .daysgrid__tasks ul li {
+            position: relative;
+            display: block;
+            font-size: 1em;
+            padding: 0.1em;
+            color: #34495e;
+        }
+
+        .daysgrid__tasks ul li::after {
+            clear: both;
+            content: "";
+            display: block;
+        }
+
+        .daysgrid__tasks ul li label {
+            width: 80%;
+            display: inline-block;
+            float: left;
+        }
+
+        .daysgrid__tasks ul li input[type="checkbox"] {
+            position: relative;
+            display: inline-block;
+            float: left;
+        }
+
+        .btn {
+            position: relative;
+            padding: 0.7em;
+            font-size: 0.7501875469em;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            opacity: 0.6;
+            float: right;
+        }
+
+        .btn:hover {
+            opacity: 1;
+        }
+
+        .cross {
+            position: relative;
+            display: block;
+        }
+
+        .cross:after, .cross:before {
+            content: "";
+            position: absolute;
+            height: 1px;
+            width: 15px;
+            left: -8px;
+            background: #2c3e50;
+        }
+
+        .cross:after {
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        .cross:before {
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .day__status--taskopen:after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            height: 0;
+            width: 0;
+            border-bottom: 0.375em solid #ecf0f1;
+            border-left: 0.375em solid transparent;
+            border-right: 0.375em solid transparent;
+        }
+
+        .day__status--done {
+            background: #2ecc71;
+        }
+
+        .day__status--undone {
+            background: #e74c3c;
+        }
+
+        @media screen and (min-width: 30em) {
+            #calendar {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -webkit-transform: perspective(1px) translateZ(0) translate(-50%, -50%);
+                transform: perspective(1px) translateZ(0) translate(-50%, -50%);
+                width: 30em;
+            }
+        }
+    </style>
+    <script>
+        window.console = window.console || function (t) {
+        };
+    </script>
+    <script>
+        if (document.location.search.match(/type=embed/gi)) {
+            window.parent.postMessage("resize", "*");
+        }
+    </script>
+</head>
+<body translate="no">
+
+<main id="calendar">
+
+
+
+
+    <header id="header" class="header">
+        <div class="header__arrow arrow--left" data-next="2019-11-21">
+            <div class="arrow__circle">
+                <div class="arrow__arrow">
+                    <div class="arrow__pipe"></div>
+                    <div class="arrow__triangle"></div>
+                </div>
+            </div>
+        </div>
+        <div class="header__main-date">
+            <div class="main-date__container"><span class="main-date__container__day">{% now 'd' %}</span>
+                <div class="day__month__wrapper"><span class="main-date__container__month">{% now 'M' %}</span><span
+                        class="main-date__container__year">{% now 'Y' %}</span></div>
+            </div>
+        </div>
+        <div class="header__arrow arrow--right" data-next="2020-01-21">
+            <div class="arrow__circle">
+                <div class="arrow__arrow">
+                    <div class="arrow__pipe"></div>
+                    <div class="arrow__triangle"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section id="days" class="days">
+        <div class="days__day"><span>Mon</span></div>
+        <div class="days__day"><span>Tue</span></div>
+        <div class="days__day"><span>Wed</span></div>
+        <div class="days__day"><span>Thu</span></div>
+        <div class="days__day"><span>Fri</span></div>
+        <div class="days__day"><span>Sat</span></div>
+        <div class="days__day"><span>Sun</span></div>
+    </section>
+    <section id="daysgrid" class="daysgrid">
+        <div class="daysgrid__week">
+            <div class="daysgrid__day " data-date="">
+                <div class="day__status"></div>
+                <div class="day__number"></div>
+            </div>
+            <div class="daysgrid__day " data-date="">
+                <div class="day__status"></div>
+                <div class="day__number"></div>
+            </div>
+            <div class="daysgrid__day " data-date="">
+                <div class="day__status"></div>
+                <div class="day__number"></div>
+            </div>
+            <div class="daysgrid__day " data-date="">
+                <div class="day__status"></div>
+                <div class="day__number"></div>
+            </div>
+            <div class="daysgrid__day " data-date="">
+                <div class="day__status"></div>
+                <div class="day__number"></div>
+            </div>
+            <div class="daysgrid__day " data-date="">
+                <div class="day__status"></div>
+                <div class="day__number"></div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-01">
+                <div class="day__status"></div>
+                <div class="day__number">1</div>
+            </div>
+        </div>
+        <div class="daysgrid__week">
+            <div class="daysgrid__day " data-date="2019-12-02">
+                <div class="day__status"></div>
+                <div class="day__number">2</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-03">
+                <div class="day__status"></div>
+                <div class="day__number">3</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-04">
+                <div class="day__status"></div>
+                <div class="day__number">4</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-05">
+                <div class="day__status"></div>
+                <div class="day__number">5</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-06">
+                <div class="day__status"></div>
+                <div class="day__number">6</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-07">
+                <div class="day__status"></div>
+                <div class="day__number">7</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-08">
+                <div class="day__status"></div>
+                <div class="day__number">8</div>
+            </div>
+        </div>
+        <div class="daysgrid__week">
+            <div class="daysgrid__day " data-date="2019-12-09">
+                <div class="day__status"></div>
+                <div class="day__number">9</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-10">
+                <div class="day__status"></div>
+                <div class="day__number">10</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-11">
+                <div class="day__status"></div>
+                <div class="day__number">11</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-12">
+                <div class="day__status"></div>
+                <div class="day__number">12</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-13">
+                <div class="day__status"></div>
+                <div class="day__number">13</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-14">
+                <div class="day__status"></div>
+                <div class="day__number">14</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-15">
+                <div class="day__status"></div>
+                <div class="day__number">15</div>
+            </div>
+        </div>
+        <div class="daysgrid__week">
+            <div class="daysgrid__day " data-date="2019-12-16">
+                <div class="day__status"></div>
+                <div class="day__number">16</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-17">
+                <div class="day__status"></div>
+                <div class="day__number">17</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-18">
+                <div class="day__status"></div>
+                <div class="day__number">18</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-19">
+                <div class="day__status"></div>
+                <div class="day__number">19</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-20">
+                <div class="day__status"></div>
+                <div class="day__number">20</div>
+            </div>
+            <div class="daysgrid__day daysgrid__day--today" data-date="2019-12-21">
+                <div class="day__status"></div>
+                <div class="day__number">21</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-22">
+                <div class="day__status"></div>
+                <div class="day__number">22</div>
+            </div>
+        </div>
+        <div class="daysgrid__week">
+            <div class="daysgrid__day " data-date="2019-12-23">
+                <div class="day__status"></div>
+                <div class="day__number">23</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-24">
+                <div class="day__status"></div>
+                <div class="day__number">24</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-25">
+                <div class="day__status"></div>
+                <div class="day__number">25</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-26">
+                <div class="day__status"></div>
+                <div class="day__number">26</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-27">
+                <div class="day__status"></div>
+                <div class="day__number">27</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-28">
+                <div class="day__status"></div>
+                <div class="day__number">28</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-29">
+                <div class="day__status"></div>
+                <div class="day__number">29</div>
+            </div>
+        </div>
+        <div class="daysgrid__week">
+            <div class="daysgrid__day " data-date="2019-12-30">
+                <div class="day__status"></div>
+                <div class="day__number">30</div>
+            </div>
+            <div class="daysgrid__day " data-date="2019-12-31">
+                <div class="day__status"></div>
+                <div class="day__number">31</div>
+            </div>
+        </div>
+    </section>
+</main>
+<script type="text/x-handlebars-template" id="days_template">
+    {{#each days}}
+    <div class="days__day"><span>{{ this }}</span></div>
+    {{/each}}
+</script>
+<script type="text/x-handlebars-template" id="cal">
+    <div>
+    <%#each days%>
+    <%#unless this.first%>
+    <%#if this.newWeek%>
+    </div>
+    <%/if%>
+    <%/unless%>
+    <%#if this.newWeek%>
+    <div class="daysgrid__week">
+        <%/if%>
+        <%#if this.today%>
+        <div class="daysgrid__day daysgrid__day--today" data-date="<% this.date %>">
+            <% else %>
+            <div class="daysgrid__day " data-date="<% this.date %>">
+                <%/if%>
+                <%#if this.has_tasks%>
+                <div class="day__status day__status--undone"></div>
+                <% else if this.done%>
+                <div class="day__status day__status--done"></div>
+                <% else %>
+                <div class="day__status"></div>
+                <%/if%>
+                <div class="day__number"><% this.number %></div>
+            </div>
+            <%/each%>
+</script>
+<script type="text/x-handlebars-template" id="tasks">
+    <div class="daysgrid__tasks" data-tasksfor="<% this.date %>">
+        <ul class="tasks">
+            <%#each tasks%>
+            <li class="tasks__task" data-taskid="<% this.id %>">
+                <%#if this.done%>
+                <input type="checkbox" id="<% this.id %>" checked="true"/>
+                <% else %>
+                <input type="checkbox" id="<% this.id %>"/>
+                <%/if%>
+                <label for="<% this.id }}"><% this.title %></label>
+                <button class="btn"><i class="cross"></i></button>
+            </li>
+            <%/each%>
+        </ul>
+        <input type="text" id="task_input" placeholder="Add task" name="task"/>
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="task">
+    <li class="tasks__task">
+        <input type="checkbox" id="<% this.id %>"/>
+        <label for="<% this.id %>"><% this.title %></label>
+        <button class="btn"><i class="cross"></i></button>
+    </li>
+</script>
+<script type="text/javascript">
+    $.ajax({
+    url: '/yourformviewurl',
+    data: {
+      'post-id': $("#yourh1id").attr('data-post-id')
+    },
+    method: 'POST',
+    dataType: 'json',
+    success: function (data) {
+      console.log('it worked!', data)
+    }
+  });
+</script>
+<script src="https://static.codepen.io/assets/common/stopExecutionOnTimeout-de7e2ef6bfefd24b79a3f68b414b87b8db5b08439cac3f1012092b2290c719cd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment-with-locales.min.js"></script>
+<script id="rendered-js">
+    /**
+     ** SPAGHETTI :x
+     ** REWRITE WITH OBSERVER or SUBSCRIBE / PUBLISH
+     ** OO MAYBE?
+     **/
+
+    (function () {
+        window.addEventListener('load', documentReady, false);
+
+        function documentReady(event) {
+            window.removeEventListener('load', documentReady, false);
+            main();
+        }
+
+        function setHeader(date) {
+            var header = document.getElementById('header');
+            var now = moment(date);
+            var left = header.querySelector('.arrow--left');
+            var right = header.querySelector('.arrow--right');
+
+            left.dataset.next = now.subtract(1, 'month').format('YYYY-MM-DD');
+            now.add(1, 'month');
+            right.dataset.next = now.add(1, 'month').format('YYYY-MM-DD');
+            now.subtract(1, 'month');
+
+            header.querySelector('.main-date__container__day').textContent = now.date();
+            header.querySelector('.main-date__container__month').textContent = now.format('MMMM');
+            header.querySelector('.main-date__container__year').textContent = now.year();
+        }
+
+        function getTasks(date) {
+            var all = JSON.parse(localStorage.getItem('tasks'));
+            if (all) {
+                return all[date];
+            }
+        }
+
+        function createCalendar(date, container) {
+            var date = moment(date);
+            var now_date = moment();
+
+            var days = date.daysInMonth();
+            var firstDay = date.set('date', 1).isoWeekday();
+            var skipDays = firstDay - 1;
+            var calTemplate = Handlebars.compile(document.getElementById('cal').innerHTML);
+            var data = {days: []};
+
+            for (i = 1; i <= days + skipDays; i++) {
+                if (window.CP.shouldStopExecution(0)) break;
+                var day = {};
+                if (i === 1) day.first = true;
+                if (i === days) day.last = true;
+                if ((i - 1) % 7 === 0) {
+                    day.newWeek = true;
+                }
+                if (i - skipDays > 0) {
+                    day.number = i - skipDays;
+                    var date_string = date.format('YYYY-MM-DD');
+                    day.date = date_string;
+                    if (now_date.isSame(date, 'day')) {
+                        day.today = true;
+                    }
+                    var tasks = getTasks(date.format('YYYY-MM-DD'));
+                    if (tasks) {
+                        var undone = tasks.filter(function (t) {
+                            return t.done === false;
+                        });
+                        if (undone.length > 0) {
+                            day.has_tasks = true;
+                            day.done = false;
+                        } else {
+                            day.has_tasks = false;
+                            day.done = true;
+                        }
+                    } else {
+                        day.has_tasks = false;
+                        day.done = false;
+                    }
+                    date.add(1, 'day');
+                }
+                data.days.push(day);
+            }
+            window.CP.exitedLoop(0);
+            container.innerHTML = calTemplate(data);
+        }
+
+        function createTaskContainer(date) {
+            var container = document.createElement('div');
+            var tasksTemplate = Handlebars.compile(document.getElementById('tasks').innerHTML);
+
+            var data = {tasks: getTasks(date), date: date};
+            container.innerHTML = tasksTemplate(data);
+
+            return container.firstElementChild;
+        }
+
+        function daysGridClick(event) {
+            var day = parseInt(event.target.textContent);
+            var inputEventBind;
+
+            if (day) {
+                var date = event.target.offsetParent.dataset.date;
+                var container = createTaskContainer(date);
+
+                if (!event.target.classList.contains('day__status--taskopen')) {
+                    [].slice.call(document.querySelectorAll('.day__status--taskopen')).forEach(function (el) {
+                        el.classList.remove('day__status--taskopen');
+                    });
+                    [].slice.call(document.querySelectorAll('.daysgrid__tasks')).forEach(function (el) {
+                        el.parentNode.removeChild(el);
+                    });
+                    inputEventBind = bindInput(container);
+                    event.target.classList.add('day__status--taskopen');
+                    event.target.parentNode.parentNode.parentNode.insertBefore(container, event.target.parentNode.parentNode.nextSibling);
+                } else {
+                    if (inputEventBind) inputEventBind.removeEventListener('keyup', inputKeyUp, false);
+                    event.target.classList.remove('day__status--taskopen');
+                    event.target.parentNode.parentNode.parentNode.removeChild(event.target.parentNode.parentNode.nextSibling);
+                }
+            } else if (event.target.classList.contains('btn')) {
+                var date = event.target.parentNode.parentNode.parentNode.dataset.tasksfor;
+                var id = event.target.parentNode.dataset.taskid;
+                var ul = event.target.parentNode.parentNode;
+
+                ul.removeChild(event.target.parentNode);
+
+                var lis = getLiData(ul);
+                updateStorage(date, lis);
+                updateDay(date, lis);
+
+            } else if (event.target.type === "checkbox") {
+                var date = event.target.parentNode.parentNode.parentNode.dataset.tasksfor;
+                var id = event.target.parentNode.dataset.taskid;
+                var ul = event.target.parentNode.parentNode;
+
+                var lis = getLiData(ul);
+                updateStorage(date, lis);
+                updateDay(date, lis);
+            }
+        }
+
+        function getLiData(ul) {
+            var data = [];
+            var lis = [].slice.call(ul.querySelectorAll('li'));
+
+            lis.forEach(function (li) {
+                var temp = {};
+                if (!!li.querySelector('input').checked === true) temp.done = true; else
+                    temp.done = false;
+                temp.id = li.querySelector('input').id;
+                temp.title = li.querySelector('label').textContent;
+                data.push(temp);
+            });
+
+            return data;
+        }
+
+        function updateStorage(date, lis) {
+            var data = JSON.parse(localStorage.getItem('tasks')) || {};
+            if (lis.length === 0) delete data[date]; else
+                data[date] = lis;
+            localStorage.setItem('tasks', JSON.stringify(data));
+        }
+
+        function updateDay(date, lis) {
+            var day = document.querySelector('div[data-date="' + date + '"]');
+            var status = day.querySelector('.day__status');
+            var undone = lis.filter(function (li) {
+                return li.done === false;
+            });
+
+            status.classList.remove('day__status--done');
+            status.classList.remove('day__status--undone');
+
+            if (lis.length > 0) {
+                if (undone.length > 0) {
+                    status.classList.remove('day__status--done');
+                    status.classList.add('day__status--undone');
+                } else {
+                    status.classList.remove('day__status--undone');
+                    status.classList.add('day__status--done');
+                }
+            }
+        }
+
+        function loadMonth(event) {
+            var newDate = this.dataset.next;
+            var daysGrid = document.getElementById('daysgrid');
+            setHeader(newDate);
+            createCalendar(newDate, daysGrid);
+        }
+
+        function bindInput(taskList) {
+            var input = taskList.querySelector('#task_input');
+            input.addEventListener('keyup', inputKeyUp, false);
+            return input;
+        }
+
+        function createId() {
+            return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+        }
+
+        function addTask(container, title) {
+            var cont = document.createElement('ul');
+            var date = container.parentNode.dataset.tasksfor;
+            var taskTemplate = Handlebars.compile(document.getElementById('task').innerHTML);
+            var id = createId();
+
+            cont.innerHTML = taskTemplate({id: id, title: title, done: false});
+            container.appendChild(cont.firstElementChild);
+
+            var lis = getLiData(container);
+            updateStorage(date, lis);
+            updateDay(date, lis);
+        }
+
+        function inputKeyUp(event) {
+            var taskList = event.target.parentNode.querySelector('ul');
+            var text;
+
+            if (event.keyCode === 0x0D) {
+                event.preventDefault();
+                text = event.target.value;
+                event.target.value = '';
+                if (!!text) addTask(taskList, text);
+            }
+        }
+
+        function createDays(container, days) {
+            var daysTemplate = Handlebars.compile(document.getElementById('days_template').innerHTML);
+            container.innerHTML = daysTemplate({days: days});
+        }
+
+        function main() {
+            var data = new Date();
+            var daysGrid = document.getElementById('daysgrid');
+            var prev = document.querySelector('.arrow--left');
+            var next = document.querySelector('.arrow--right');
+
+            moment.locale(window.navigator.language || 'en');
+            var days = moment.weekdaysShort();
+            var first_day = days[0];
+            days = days.slice(1).concat(first_day);
+
+            daysGrid.addEventListener('click', daysGridClick, false);
+            prev.addEventListener('click', loadMonth, false);
+            next.addEventListener('click', loadMonth, false);
+
+            setHeader(data);
+            createDays(document.getElementById('days'), days);
+            createCalendar(data, daysGrid);
+        };
+    })();
+    //# sourceURL=pen.js
+</script>
+
+
+</body>
+</html>

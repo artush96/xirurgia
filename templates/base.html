@@ -1,0 +1,299 @@
+{% load static i18n %}
+
+<!doctype html>
+<html lang="hy">
+
+<head>
+    <title>{% trans 'Բժիշկ Տիգրան Մեսրոպյան' %}</title>
+    <meta name="title" content="{% trans 'Բժիշկ Տիգրան Մեսրոպյան' %}">
+    <meta name="description" content="{% trans 'Բժիշկ Տիգրան Մեսրոպյան description' %}">
+    <meta name="keywords"
+          content="{% trans 'Բժշկական կենտրոն, Բարիատրիկ վիրաբուժություն, Էնդոկրին վիրաբուժություն, լապարոսկոպիկ վիրաբուժություն, Օնկովիրաբուժություն, նիհարեցում, բուժում, վիրահատություն' %}">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Artush Ghazaryan">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/favicon/apple-icon-57x57.png' %}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{% static 'img/favicon/apple-icon-60x60.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/favicon/apple-icon-72x72.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/favicon/apple-icon-76x76.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/favicon/apple-icon-114x114.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'img/favicon/apple-icon-120x120.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'img/favicon/apple-icon-144x144.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'img/favicon/apple-icon-152x152.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-icon-180x180.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'img/favicon/android-icon-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/favicon/favicon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{% static 'img/favicon/ms-icon-144x144.png' %}">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css?family=Arbutus+Slab|Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'fonts/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+<div class="site-wrap">
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close mt-3">
+                <span class="js-menu-toggle" aria-hidden="true">&times;</span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+    {% if works %}
+        <header class="site-navbar py-4 js-sticky-header site-navbar-target" role="banner">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-center">
+                    <div class="">
+                        <nav class="site-navigation position-relative text-right" role="navigation">
+                            <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+                                <li><a href="#services-section" class="nav-link">{% trans 'Ծառայություններ' %}</a></li>
+                                <li><a href="#about-section" class="nav-link">{% trans 'Մեր մասին' %}</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class=" text-center mx-5">
+                        <h1 class="m-0 site-logo"><a class="nav-link" href="{% url 'core:base' %}">{% trans 'Գլխավոր' %}</a></h1>
+                    </div>
+                    <div class="text-left">
+                        <nav class="site-navigation position-relative" role="navigation">
+                            <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+                                <li><a href="#portfolio-section" class="nav-link">{% trans 'Մեր գործերը' %}</a></li>
+                                <li><a href="#contact-section" class="nav-link">{% trans 'Կոնտակտներ' %}</a></li>
+                                <li>
+                                    {% get_current_language as LANGUAGE_CODE %}
+                                    <form action="{% url 'set_language' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ redirect_to }}">
+                                        <select name="language" id="">
+                                            {% get_available_languages as LANGUAGES %}
+                                            {% get_language_info_list for LANGUAGES as languages %}
+                                            {% for foo in languages %}
+                                                <option value="{{ foo.code }}"
+                                                        {% if foo.code == LANGUAGE_CODE %}selected{% endif %}>
+                                                    {{ foo.name_local }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <input style="border-radius: 15px" type="submit" value="Go">
+                                    </form>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div class="d-inline-block d-lg-none" style="position: relative; top: 3px;">
+                            <a href="/" class="site-menu-toggle js-menu-toggle float-right">
+                                <img style="max-width: 20%" src="{% static 'img/menu.png' %}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    {% else %}
+        <header class="site-navbar py-4 js-sticky-header site-navbar-target" role="banner">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-center">
+                    <div class="">
+                        <nav class="site-navigation position-relative text-right" role="navigation">
+                            <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+                                <li><a href="/{{ LANGUAGE_CODE }}/#services-section" class="nav-link">{% trans 'Ծառայություններ' %}</a></li>
+                                <li><a href="/{{ LANGUAGE_CODE }}/#about-section" class="nav-link">{% trans 'Մեր մասին' %}</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class=" text-center mx-5">
+                        <h1 class="m-0 site-logo"><a class="nav-link" href="{% url 'core:base' %}">{% trans 'Գլխավոր' %}</a></h1>
+                    </div>
+                    <div class="text-left">
+                        <nav class="site-navigation position-relative" role="navigation">
+                            <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+                                <li><a href="/{{ LANGUAGE_CODE }}/#portfolio-section" class="nav-link">{% trans 'Մեր գործերը' %}</a></li>
+                                <li><a href="/{{ LANGUAGE_CODE }}/#contact-section" class="nav-link">{% trans 'Կոնտակտներ' %}</a></li>
+                            </ul>
+                        </nav>
+                        <div class="d-inline-block d-lg-none" style="position: relative; top: 3px;">
+                            <a href="/" class="site-menu-toggle js-menu-toggle float-right">
+                                <img style="max-width: 20%" src="{% static 'img/menu.png' %}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="float-right">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ redirect_to }}">
+                        <div class="">
+                            <div class="row">
+                                <div class="col-8">
+                                    <select class="form-control" name="language" id="">
+                                        {% get_available_languages as LANGUAGES %}
+                                        {% get_language_info_list for LANGUAGES as languages %}
+                                        {% for foo in languages %}
+                                            <option value="{{ foo.code }}"
+                                                    {% if foo.code == LANGUAGE_CODE %}selected{% endif %}>
+                                                {{ foo.name_local }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-4 m-auto">
+                                    <input style="border-radius: 15px" type="submit" value="Go">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </header>
+    {% endif %}
+    <div class="site-blocks-cover overlay bg-light" id="home-section">
+        {% if general %}
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-12 mt-lg-5 text-left align-self-center text-intro">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                {% if LANGUAGE_CODE == 'en' and general.name_en|length > 0 %}
+                                    <h1 class="text-black">{{ general.name_en }}</h1>
+                                    <p class="lead">{{ general.info_en }}</p>
+                                {% elif LANGUAGE_CODE == 'ru' and general.name_ru|length > 0 %}
+                                    <h1 class="text-black">{{ general.name_ru }}</h1>
+                                    <p class="lead">{{ general.info_ru }}</p>
+                                {% else %}
+                                    <h1 class="text-black">{{ general.name_hy }}</h1>
+                                    <p class="lead">{{ general.info_hy }}</p>
+                                {% endif %}
+                                <div class="row">
+                                    <div class="col-1">
+                                        <img style="max-width: 20px; min-width: 15px"
+                                             src="{% static 'img/phone-1.png' %}" alt="Կապ մեր հետ">
+                                    </div>
+                                    <div class="col-7">
+                                        <a href="tel:{{ general.phone }}">{{ general.phone }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <img src="{{ general.img.url }}" class="img-face" data-aos="fade" alt="Բժիշկ">
+        {% endif %}
+    </div>
+    {% block core %}
+
+    {% endblock %}
+    <footer class="site-section bg-light footer">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-3">
+                    <h3 class="footer-title">{% trans 'Հասցե ՝' %}</h3>
+                    <p>
+                        {% if LANGUAGE_CODE == 'en' and contacts.address_en|length > 0 %}
+                            <span class="d-inline-block d-md-block">{{ contacts.address_en }}</span>
+                            {% trans 'Հայաստան' %}
+                        {% elif LANGUAGE_CODE == 'ru' and contacts.address_ru|length > 0 %}
+                            <span class="d-inline-block d-md-block">{{ contacts.address_ru }}</span>
+                            {% trans 'Հայաստան' %}
+                        {% else %}
+                            <span class="d-inline-block d-md-block">{{ contacts.address_hy }}</span>
+                            {% trans 'Հայաստան' %}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-5 mx-auto">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <h3 class="footer-title">{% trans 'Տեղեկատվություն' %}</h3>
+                            <ul class="list-unstyled">
+                                <div class="row">
+                                    {% for foo in information %}
+                                        <div class="col-3">
+                                            <li>
+                                                <a href="/info/{{ foo.id }}">{{ foo.name }}</a>
+                                            </li>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    {% if contacts %}
+                        <h3 class="footer-title">{% trans 'Կոնտակտներ' %}</h3>
+                        <a href="mailto:{{ contacts.mail }}" target="_blank">
+                            <img style="max-height: 35px" src="{% static 'img/gmail.png' %}" alt="">
+                        </a>
+                        <a href="https://wa.me/{{ contacts.whatsapp }}" target="_blank">
+                            <img style="max-height: 35px" src="{% static 'img/whatsapp.png' %}" alt="">
+                        </a>
+                        <a href="viber://chat?number={{ contacts.viber }}" target="_blank">
+                            <img style="max-height: 35px" src="{% static 'img/viber.png' %}" alt="">
+                        </a>
+                        <a href="{{ contacts.fb }}" target="_blank">
+                            <img style="max-height: 35px" src="{% static 'img/facebook.png' %}" alt="">
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>
+                        &copy; {% now "Y" %}
+                        {% trans 'Բոլոր իրավունքները պաշտպանված են | Ստեղծված է սիրով ՝' %}
+                        <a href="http://artush-ghazaryan.info" target="_blank">{% trans 'Ա. Ղազարյան' %}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/aos.js' %}"></script>
+{#<script type="text/javascript" src="{% static 'js/jquery.fancybox.min.js' %}"></script>#}
+<script type="text/javascript" src="{% static 'js/jquery.sticky.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+
+{#<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"#}
+{#        type="15b347113fa4f17982829f55-text/javascript"></script>#}
+
+{#<script type="15b347113fa4f17982829f55-text/javascript">#}
+{#    window.dataLayer = window.dataLayer || [];#}
+{##}
+{#    function gtag() {#}
+{#      dataLayer.push(arguments);#}
+{#    }#}
+{#    gtag('js', new Date());#}
+{##}
+{#    gtag('config', 'UA-23581568-13');#}
+{##}
+{##}
+{##}
+{#</script>#}
+
+{#<script type="text/javascript" src="{% static 'js/rocket-loader.min.js' %}"#}
+{#        data-cf-settings="15b347113fa4f17982829f55-|49" defer=""></script>#}
+
+</body>
+
+</html>

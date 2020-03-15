@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block core %}
+    <section class="site-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 mb-5 position-relative">
+                    <h2 class="section-title text-center mb-5">{% trans 'Ավելացնել կարծիք' %}</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col--lg-6 col-md-6 col-sm-11 mt-5">
+                    <form action="." method="post">
+                        {% csrf_token %}
+{#                        {{ form.media }}#}
+                        {% if LANGUAGE_CODE == 'hy' %}
+                            <div class="form-group">
+                                {{ form.name_hy }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.disease_hy }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.content_hy }}
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-dark" type="submit" value="{% trans 'Ավելացնել' %}">
+                            </div>
+                        {% elif LANGUAGE_CODE == 'ru' %}
+                            <div class="form-group">
+                                {{ form.name_ru }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.disease_ru }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.content_ru }}
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-dark" type="submit" value="{% trans 'Ավելացնել' %}">
+                            </div>
+                        {% else %}
+                            <div class="form-group">
+                                {{ form.name_en }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.disease_en }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.content_en }}
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-dark" type="submit" value="{% trans 'Ավելացնել' %}">
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

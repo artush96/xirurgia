@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block core %}
+    <section class="site-section" id="review">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 mb-5 position-relative">
+                    <h2 class="section-title text-center mb-5">{% trans 'Կարծիքներ' %}</h2>
+                    <a class="btn btn-light" href="{% url 'core:review_create' %}">{% trans 'Ավելացնել նորը' %}</a>
+                </div>
+            </div>
+            <div class="row">
+                {% for foo in reviews %}
+                    <div class="col-12 mt-5">
+                        {% if LANGUAGE_CODE == 'en' and info.name_en|length > 0 %}
+                            <h3>{{ foo.disease_en }}</h3>
+                            <p>{{ foo.content_en|safe }}</p>
+                            <div class="row">
+                                <div class="col-12">
+                                    <cite>&mdash; {{ foo.name_en }}</cite>
+                                </div>
+                                <div class="col-12">
+                                    <cite style="font-size: 10px">{{ foo.pub_date|date:'M d Y' }}</cite>
+                                </div>
+                            </div>
+                        {% elif LANGUAGE_CODE == 'ru' and info.name_ru|length > 0 %}
+                            <h3>{{ foo.disease_ru }}</h3>
+                            <p>{{ foo.content_ru|safe }}</p>
+                            <div class="row">
+                                <div class="col-12">
+                                    <cite>&mdash; {{ foo.name_ru }}</cite>
+                                </div>
+                                <div class="col-12">
+                                    <cite style="font-size: 10px">{{ foo.pub_date|date:'M d Y' }}</cite>
+                                </div>
+                            </div>
+                        {% else %}
+                            <h3>{{ foo.disease_hy }}</h3>
+                            <p>{{ foo.content_hy|safe }}</p>
+                            <div class="row">
+                                <div class="col-12">
+                                    <cite>&mdash; {{ foo.name_hy }}</cite>
+                                </div>
+                                <div class="col-12">
+                                    <cite style="font-size: 10px">{{ foo.pub_date|date:'M d Y' }}</cite>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

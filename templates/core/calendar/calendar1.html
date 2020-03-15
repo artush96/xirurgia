@@ -1,0 +1,197 @@
+{% load static %}
+<!doctype html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="{% static 'js/datedropper.pro.min.js' %}"></script>
+    <title>Document</title>
+</head>
+<body>
+<div class="row justify-content-center">
+    <div class="col-6">
+        {% for foo in a %}
+            {{ foo }}
+        {% endfor %}
+    </div>
+</div>
+
+
+<form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="row justify-content-center">
+        <p>Ընտրել օրը</p>
+        <div class="col-4 get-date">
+            <a class="btn btn-light get-date-data for-active-class active" id="today" data-date="{{ today }}">Այսօր</a>
+            <a class="btn btn-light get-date-data for-active-class" id="tomorrow" data-date="{{ tomorrow }}">Վաղը</a>
+            <input type="text" placeholder="Ընտրել օրը" class="btn btn-light get-date-data" id="date-input"
+                   data-dd-lang="hy" data-dd-format="Y-m-d" data-dd-min-year="{% now 'Y' %}"
+                   data-dd-max-year="{{ nextYear }}"
+                   data-dd-modal="true" data-dd-large-only="true"
+                   data-dd-disabled-days="{% for foo in weekends %}{{ foo }},{% endfor %}"
+                    {#data-dd-disabled-days="01/20/2020,01/21/2020,01/25/2020,01/26/2020"#}
+                   data-dd-lock="from"
+            >
+
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="mt-5">Ընտրել ժամը</p>
+        <div class="col-4 get-time">
+            {% for choice in choices %}
+                <a class="btn btn-light get-time-data" data-time="{{choice}}" {% if choices %}
+                
+                {% endif %} >{{choice}}</a>
+            {% endfor %}
+
+{#            <a class="btn btn-light get-time-data active" data-time="10:00-10:30">10:00-10:30</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="10:30-11:00">10:30-11:00</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="11:00-11:30">11:00-11:30</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="11:30-12:00">11:30-12:00</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="12:00-12:30">12:00-12:30</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="12:30-13:00">12:30-13:00</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="13:00-13:30">13:00-13:30</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="13:30-14:00">13:30-14:00</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="14:00-14:30">14:00-14:30</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="14:30-15:00">14:30-15:00</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="15:00-15:30">15:00-15:30</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="15:30-16:00">15:30-16:00</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="16:00-16:30">16:00-16:30</a>#}
+{#            <a class="btn btn-light get-time-data" data-time="16:30-17:00">16:30-17:00</a>#}
+        </div>
+
+    </div>
+    {#    <button id="send">Send Data</button>#}
+    <input id="send" type="submit" value="Գրանցվել">
+
+
+</form>
+<script type="text/javascript">
+    $('#date-input').dateDropper();
+
+    var $ = jQuery;
+    $(document).ready(function () {
+        $('.get-time-data').on('click', function (e) {
+            var previous = $(this).closest(".get-time").children(".active");
+            previous.removeClass('active'); // previous list-item
+            $(e.target).addClass('active'); // activated list-item
+            var time = $('.get-time').find('.active').data('time');
+        });
+
+        $('.get-date-data').on('click', function (e) {
+            var previous = $(this).closest(".get-date").children(".active");
+            var date_in = new Date($('#date-input').val());
+            day = date_in.getDate();
+            month = date_in.getMonth() + 1;
+            year = date_in.getFullYear();
+            previous.removeClass('active'); // previous list-item
+            $(e.target).addClass('active'); // activated list-item
+            var input_date = $('#date-input').val();
+
+            var date = $('.get-date').find('.active').data('date');
+
+        });
+    });
+    $("#send").click(function (e) {
+        e.preventDefault();
+
+        var date = new Date(document.getElementById("date-input").value);
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        var time = $('.get-time').find('.active').data('time');
+
+        if ($('.for-active-class').hasClass('active')) {
+            date = $('.get-date').find('.active').data('date');
+        } else {
+            if (document.getElementById("date-input").value !== '')
+                date = $('#date-input').val();
+        }
+
+        
+
+
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        {#$.ajaxSetup({#}
+        {#    beforeSend: function (xhr, settings) {#}
+        {#        // if not safe, set csrftoken#}
+        {#        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {#}
+        {#            xhr.setRequestHeader("X-CSRFToken", csrftoken);#}
+        {#        }#}
+        {#    }#}
+        {# });#}
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie != '') {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) {
+                            var cookie = jQuery.trim(cookies[i]);
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    // Only send the token to relative URLs i.e. locally.
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+
+        var ssdata = {
+            time: time,
+            date: date
+        };
+        $.ajax({
+            type: "post",
+            url: "{% url 'core:calendar' %}",
+            data: ssdata,
+            success: function (data) {
+                {#date = ssdata.date;#}
+                {#time = ssdata.time;#}
+                console.log('Success');
+                {#console.log(data)#}
+            },
+            error: function (errdata) {
+                console.log(errdata);
+                {#date = ssdata.date;#}
+                {#time = ssdata.time;#}
+                {#console.log(date);#}
+                {#console.log(time);#}
+                {#console.log(data);#}
+                {#console.log('Error')#}
+            }
+
+        });
+
+        {#console.log(ssdata)#}
+    });
+</script>
+{#<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>#}
+{#<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"#}
+{#        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"#}
+{#        crossorigin="anonymous"></script>#}
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>

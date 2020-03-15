@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+<div class="row justify-content-center">
+    <div class="col-6">
+        {% for foo in a %}
+            {{ foo }}
+        {% endfor %}
+    </div>
+</div>
+
+
+<form action=".">{% csrf_token %}
+    <div class="row justify-content-center">
+        <p>Ընտրել օրը</p>
+        <div class="col-4 get-date">
+            <a class="btn btn-success get-date-data " id="today" data-date="{{ today }}">{{ today }}</a>
+            <a class="btn btn-success get-date-data " id="tomorrow" data-date="{{ tomorrow }}">{{ tomorrow }}</a>
+            <input class="btn btn-success get-date-data" type="date" id="date-input" min=""/>
+            {#            <input  type="date"  min=""/>#}
+
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="mt-5">Ընտրել ժամը</p>
+        <div class="col-4 get-time">
+            <a class="btn btn-success get-time-data active" id="time-1" data-time="16:30-17:00">16:30-17:00</a>
+            <a class="btn btn-success get-time-data " id="time-2" data-time="16:00-16:30">16:00-16:30</a>
+        </div>
+
+    </div>
+    <button id="send">Send Data</button>
+
+    {#<a class="btn btn-success" href="{% url 'core:parse' %}">Save</a>#}
+
+
+    <script type="text/javascript">
+
+        var $ = jQuery;
+        {#var date;#}
+        {#var time;#}
+        $(document).ready(function () {
+            {#var today = $("#today").attr("data-date");#}
+            {#var tomorrow = $("#tomottow").attr("data-date");#}
+            {#var date = $("#date").attr("data-other-date");#}
+            {#var time1 = $("#time-1").attr("data-time");#}
+            {#var time2 = $("#time-2").attr("data-time");#}
+            {#var data = [];#}
+
+
+            $('.get-time-data').on('click', function (e) {
+
+                var previous = $(this).closest(".get-time").children(".active");
+                previous.removeClass('active'); // previous list-item
+                $(e.target).addClass('active'); // activated list-item
+
+                var time = $('.get-time').find('.active').data('time');
+
+                {#console.log(time);#}
+            });
+
+            $('.get-date-data').on('click', function (e) {
+
+                var previous = $(this).closest(".get-date").children(".active");
+                var date_in = new Date($('#date-input').val());
+                day = date_in.getDate();
+                month = date_in.getMonth() + 1;
+                year = date_in.getFullYear();
+                previous.removeClass('active'); // previous list-item
+                $(e.target).addClass('active'); // activated list-item
+                var input_date = [day, month, year].join('/');
+                var date = $('.get-date').find('.active').data('date');
+
+                console.log(input_date);
+            });
+            {#$('.get-date-data').on('click', function () {#}
+            {#    var date = new Date($('.get-date').val());#}
+            {#    day = date.getDate();#}
+            {#    month = date.getMonth() + 1;#}
+            {#    year = date.getFullYear();#}
+            {#alert([day, month, year].join('/'));#}
+            {# });#}
+        });
+        $(document).ready().on('click', function (e) {
+            var date = $('.get-date').find('.active').data('date');
+            var time = $('.get-time').find('.active').data('time');
+            var date_in = [day, month, year].join('/');
+
+            var data = {
+                'date': date,
+                'time': time,
+                'dat_in': date_in,
+            };
+            {#console.log(data)#}
+        });
+        $("#send").click(function (e) {
+            e.preventDefault();
+            var date = $('.get-date').find('.active').data('date');
+            var time = $('.get-time').find('.active').data('time');
+            var date_in = [day, month, year].join('/');
+            var data = {
+                'date': date,
+                'time': time,
+                'dat_in': date_in,
+            };
+            console.log(data)
+        });
+        {##}
+        {##}
+        {#var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();#}
+        {##}
+        {#function csrfSafeMethod(method) {#}
+        {#    // these HTTP methods do not require CSRF protection#}
+        {#    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));#}
+        {# }#}
+        {##}
+        {#$.ajaxSetup({#}
+        {#    beforeSend: function (xhr, settings) {#}
+        {#        // if not safe, set csrftoken#}
+        {#        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {#}
+        {#            xhr.setRequestHeader("X-CSRFToken", csrftoken);#}
+        {#        }#}
+        {#    }#}
+        {# });#}
+        {##}
+        {#$.ajax({#}
+        {#    url: "{% url 'core:calendar' %}",#}
+        {#    data: {#}
+        {#        'time': time,#}
+        {#        'date': date,#}
+        {#    },#}
+        {#    dataType: 'json',#}
+        {#    success: function (res, status, data) {#}
+        {#        alert(res);#}
+        {#        alert(status);#}
+        {#        console.log(data)#}
+        {#    },#}
+        {#    error: function (res) {#}
+        {#alert(res.status);#}
+        {#    }#}
+        {##}
+        {# });#}
+    </script>
+
+
+</form>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>
