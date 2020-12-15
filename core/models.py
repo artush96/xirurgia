@@ -109,7 +109,7 @@ class Review(models.Model):
     disease_hy = models.CharField(max_length=100, blank=True, db_index=True, verbose_name='Բուժված հիվանդությունը (hy)')
     disease_ru = models.CharField(max_length=100, blank=True, db_index=True, verbose_name='Բուժված հիվանդությունը (ru)')
     disease_en = models.CharField(max_length=100, blank=True, db_index=True, verbose_name='Բուժված հիվանդությունը (en)')
-    published = models.BooleanField(verbose_name='Հրապարակել')
+    published = models.BooleanField(default=False, verbose_name='Հրապարակել')
     pub_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
